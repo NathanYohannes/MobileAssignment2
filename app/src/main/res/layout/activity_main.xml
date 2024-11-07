@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,52 +8,124 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Title TextView -->
     <TextView
         android:id="@+id/outputTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/addressLookupText"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/inputAddressTextField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.109" />
+        app:layout_constraintVertical_bias="0.1" />
 
+    <!-- Address Input Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputAddressTextField"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Enter an address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/outputTextView">
+        app:layout_constraintTop_toBottomOf="@id/outputTextView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="enter an address" />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Latitude Input Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLatitudeTextField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter latitude"
+        app:layout_constraintTop_toBottomOf="@id/inputAddressTextField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextLatitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Longitude Input Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLongitudeTextField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter longitude"
+        app:layout_constraintTop_toBottomOf="@id/inputLatitudeTextField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextLongitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Search Button -->
     <Button
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="16dp"
         android:onClick="search"
         android:text="@string/searchButtonText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputAddressTextField" />
+        app:layout_constraintTop_toBottomOf="@id/inputLongitudeTextField" />
 
-    <TextView
-        android:id="@+id/addressOutputView"
+    <!-- Add Location Button -->
+    <Button
+        android:id="@+id/btnAddLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text=""
+        android:text="Add Location"
+        android:onClick="addLocation"
+        app:layout_constraintTop_toBottomOf="@id/searchButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Update Location Button -->
+    <Button
+        android:id="@+id/btnUpdateLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Location"
+        android:onClick="updateLocation"
+        app:layout_constraintTop_toBottomOf="@id/btnAddLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Delete Location Button -->
+    <Button
+        android:id="@+id/btnDeleteLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Location"
+        android:onClick="deleteLocation"
+        app:layout_constraintTop_toBottomOf="@id/btnUpdateLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Output TextView for Results -->
+    <TextView
+        android:id="@+id/addressOutputView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btnDeleteLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

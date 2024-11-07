@@ -17,12 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
+    private DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        dbHandler = new DBHandler(this);
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -41,24 +41,75 @@ public class MainActivity extends AppCompatActivity {
 
         GenerateAndStoreLocations addressGenerator = new GenerateAndStoreLocations(this);
         addressGenerator.generateAndStoreLocations();
-
     }
 
-    public void search(View v){
-
-        DBHandler dbHandler = new DBHandler(this);
-        TextView addressOutputView = (TextView) findViewById(R.id.addressOutputView);
+    private String getAddressInput() {
         TextInputLayout inputAddressView = findViewById(R.id.inputAddressTextField);
+        return inputAddressView.getEditText().getText().toString().trim();
+    }
 
-        String addressText = inputAddressView.getEditText().getText().toString();
+    private double getLatitudeInput() {
+        TextInputLayout inputLatitudeView = findViewById(R.id.inputLatitudeTextField);
+        String latText = inputLatitudeView.getEditText().getText().toString().trim();
+        return latText.isEmpty() ? 0 : Double.parseDouble(latText);
+    }
+
+    private double getLongitudeInput() {
+        TextInputLayout inputLongitudeView = findViewById(R.id.inputLongitudeTextField);
+        String longText = inputLongitudeView.getEditText().getText().toString().trim();
+        return longText.isEmpty() ? 0 : Double.parseDouble(longText);
+    }
+
+    public void search(View v) {
+        String addressText = getAddressInput();
+        TextView addressOutputView = findViewById(R.id.addressOutputView);
+
         ArrayList<Location> searchResults = new ArrayList<>(dbHandler.searchLocationsByAddress(addressText));
-        if (searchResults.isEmpty()){
+        if (searchResults.isEmpty()) {
             addressOutputView.setText("No Matching Locations Found");
-        }
-        else {
+        } else {
             String locationsString = LocationUtils.convertLocationsToString(searchResults);
             addressOutputView.setText(locationsString);
         }
     }
 
+    public void addLocation(View v) {
+        String address = getAddressInput();
+        double latitude = getLatitudeInput();
+        double longitude = getLongitudeInput();
+
+        dbHandler.addLocation(address, latitude, longitude);
+        showMessage("Location added successfully!");
+    }
+
+    public void updateLocation(View v) {
+        String address = getAddressInput();
+        double latitude = getLatitudeInput();
+        double longitude = getLongitudeInput();
+
+        Location location = dbHandler.searchLocationsByAddress(address).stream().findFirst().orElse(null);
+        if (location != null) {
+            Location updatedLocation = new Location(location.getId(), address, latitude, longitude);
+            dbHandler.updateLocation(updatedLocation);
+            showMessage("Location updated successfully!");
+        } else {
+            showMessage("Location not found for update.");
+        }
+    }
+
+    public void deleteLocation(View v) {
+        String address = getAddressInput();
+        Location location = dbHandler.searchLocationsByAddress(address).stream().findFirst().orElse(null);
+        if (location != null) {
+            dbHandler.deleteLocation(location.getId());
+            showMessage("Location deleted successfully!");
+        } else {
+            showMessage("Location not found for deletion.");
+        }
+    }
+
+    private void showMessage(String message) {
+        TextView addressOutputView = findViewById(R.id.addressOutputView);
+        addressOutputView.setText(message);
+    }
 }

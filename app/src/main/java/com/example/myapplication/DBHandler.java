@@ -168,5 +168,39 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    // Method to update a location
+    public void updateLocation(Location location) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ADDRESS_COL, location.getAddress());
+        values.put(LATITUDE_COL, location.getLatitude());
+        values.put(LONGITUDE_COL, location.getLongitude());
+
+        db.update(TABLE_NAME, values, ADDRESS_COL + "=?", new String[]{location.getAddress()});
+        db.close();
+    }
+
+    // Method to delete a location by address
+    public void deleteLocationByAddress(String address) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, ADDRESS_COL + "=?", new String[]{address});
+        db.close();
+    }
+
+    // Method to get a location by address
+    public Location getLocationByAddress(String address) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, null, ADDRESS_COL + "=?", new String[]{address}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(ID_COL));
+            double latitude = cursor.getDouble(cursor.getColumnIndexOrThrow(LATITUDE_COL));
+            double longitude = cursor.getDouble(cursor.getColumnIndexOrThrow(LONGITUDE_COL));
+            cursor.close();
+            return new Location(id, address, latitude, longitude);
+        }
+        return null;
+    }
+
 
 }
