@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="addressLookupText">lookup an address</string>
+    <string name="searchButtonText">Search</string>
+</resources>
